@@ -5,9 +5,10 @@ import java.io.IOException;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 
+import com.toaster.lgcommunication.IMessageHandler;
+
 import android.util.Log;
 
-import cam.toaster.lgcommunication.IMessageHandler;
 
 
 
@@ -45,7 +46,6 @@ public class UDPPacketReceiver implements Runnable
 			try 
 			{
 				socket.receive(receivedPacket);
-				
 				handler.onMessageReceived(receivedPacket.getAddress(),buffer, receivedPacket.getLength());
 			} 
 			catch (IOException e) 

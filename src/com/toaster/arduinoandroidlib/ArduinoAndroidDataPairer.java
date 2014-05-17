@@ -1,7 +1,8 @@
 package com.toaster.arduinoandroidlib;
 
+import com.toaster.lgcontroller.LaserGunController;
+
 import android.util.Log;
-import cam.toaster.lgcontroller.LaserGunController;
 
 public class ArduinoAndroidDataPairer 
 {

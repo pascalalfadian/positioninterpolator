@@ -3,15 +3,18 @@ package com.toaster.ipcommunication.udppacket;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
+import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.net.SocketException;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
 import java.util.jar.Pack200.Packer;
 
+import com.toaster.lgcommunication.IMessageHandler;
+
 import android.graphics.Point;
 import android.util.Log;
 
-import cam.toaster.lgcommunication.IMessageHandler;
 
 
 public class UDPPacketManager
@@ -28,12 +31,18 @@ public class UDPPacketManager
 		this.port=port;
 		try 
 		{
-			socket=new DatagramSocket(port);
+		
+			
+			socket=new DatagramSocket(null);
+			socket.setReuseAddress(true);
+			socket.setBroadcast(true);
+			socket.bind(new InetSocketAddress(port));
 		} 
 		catch (SocketException e) 
 		{
-			
-		}
+			Log.v("udp", e.toString());
+		} 
+		
 		targetSocketList=new ArrayList<InetAddress>();
 		receiver=new UDPPacketReceiver(this, socket, handler);
 		sender=new UDPPacketSender(this, socket);
@@ -93,6 +102,8 @@ public class UDPPacketManager
 	public void cleanup()
 	{
 		isIntentionallyClosed=true;
+		socket.close();
+		Log.v("udp", "socket closed");
 		sender.cleanup();
 		receiver.cleanup();
 	}
@@ -103,7 +114,6 @@ public class UDPPacketManager
 		{
 			sender.send(new DatagramPacket(buffer, length, targetSocketList.get(i), port));
 		}
-		
 		return true;
 	}
 	
